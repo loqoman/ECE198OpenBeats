@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name OpenBeatsSymbolLibrary)(type Legacy)(uri ${KIPRJMOD}/OpenBeatsSymbolLibrary.lib)(options "")(descr ""))
+  (lib (name OpenBeatsKicad-rescue)(type Legacy)(uri ${KIPRJMOD}/OpenBeatsKicad-rescue.lib)(options "")(descr ""))
+)
