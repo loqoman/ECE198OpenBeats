@@ -18,17 +18,17 @@ Wire Wire Line
 Wire Wire Line
 	9600 5300 10600 5300
 Wire Wire Line
-	9600 6200 10600 6200
-Wire Wire Line
-	9600 5550 10600 5550
+	9600 6300 10600 6300
 Wire Wire Line
 	9600 5650 10600 5650
 Wire Wire Line
+	9600 5750 10600 5750
+Wire Wire Line
 	9600 5400 10600 5400
 Wire Wire Line
-	9600 5800 10600 5800
-Wire Wire Line
 	9600 5900 10600 5900
+Wire Wire Line
+	9600 6000 10600 6000
 Text Label 10300 5200 0    50   ~ 0
 STM_5V
 Text Label 10300 5300 0    50   ~ 0
@@ -41,11 +41,11 @@ Text Label 1700 1950 1    50   ~ 0
 STM_A3
 Text Label 1550 1950 1    50   ~ 0
 STM_A4
-Text Label 10300 6200 0    50   ~ 0
+Text Label 10300 6300 0    50   ~ 0
 STM_A5
-Text Label 10300 5550 0    50   ~ 0
-STM_SCL
 Text Label 10300 5650 0    50   ~ 0
+STM_SCL
+Text Label 10300 5750 0    50   ~ 0
 STM_SDA
 Text Label 10300 5400 0    50   ~ 0
 STM_AVDD
@@ -65,9 +65,9 @@ Text Label 1700 5450 0    50   ~ 0
 STM_(PWM)D6
 Text Label 1700 5350 0    50   ~ 0
 STM_(PWM)D5
-Text Label 10300 5800 0    50   ~ 0
-STM_D4
 Text Label 10300 5900 0    50   ~ 0
+STM_D4
+Text Label 10300 6000 0    50   ~ 0
 STM_(PWM)D3
 Text Label 1950 5800 0    50   ~ 0
 STM_D2
@@ -1323,14 +1323,14 @@ Wire Wire Line
 Connection ~ 7300 2900
 Wire Wire Line
 	7300 2900 7700 2900
-Text Label 10300 6100 0    50   ~ 0
+Text Label 10300 6200 0    50   ~ 0
 STM_(RX)D0
-Text Label 10300 6000 0    50   ~ 0
+Text Label 10300 6100 0    50   ~ 0
 STM_(TX)D1
 Wire Wire Line
-	9600 6100 10600 6100
+	9600 6200 10600 6200
 Wire Wire Line
-	9600 6000 10600 6000
+	9600 6100 10600 6100
 Wire Wire Line
 	7100 1500 7100 2500
 Wire Wire Line
