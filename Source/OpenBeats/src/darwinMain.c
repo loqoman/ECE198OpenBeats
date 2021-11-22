@@ -29,7 +29,16 @@ int main(void) {
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
-    
+
+    // --- (temp) Button Pins ---
+    // PC13
+    // PC14
+    // PC2
+    // PC3
+    InitializePin(GPIOC, GPIO_PIN_13, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);  // on-board LED  
+    InitializePin(GPIOC, GPIO_PIN_14, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);  // on-board LED 
+    InitializePin(GPIOC, GPIO_PIN_2,  GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);  // on-board LED 
+    InitializePin(GPIOC, GPIO_PIN_3,  GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);  // on-board LED 
    
     // --- CD74HC Pins --- 
     // The Sig pin (A0) is used as the input and the 4 digital pin is used to select which pin you 
@@ -71,19 +80,27 @@ int main(void) {
 
 
     char outputBitmask = 0x1; 
-    int bpm = 120;                  // Change if you want a different bpm 
+    int bpm = 180;                  // Change if you want a different bpm 
     int timeDelay = 60000 / bpm;   // Time between each beat
 
+    bool led1 = 1, led2 = 1, led3 = 1, led4 = 1; 
     // --- While True --- 
     while(true) {
         // --- Beatmap blinking --- 
+
+
             // N.B Green LED is beat 1. Assumes 4/4. Read Left to right  
-        // TODO: Can put a for loop here
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, outputBitmask & 0x01);     // B5  -> First LED (Green)
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, outputBitmask & 0x02);     // B3  -> Second LED (Red)
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, outputBitmask & 0x04);     // B4  -> Third LED (Red)
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, outputBitmask & 0x08);    // B10 -> Fourth LED (Red)
-         
+        // TODO: Can put a for loop here 
+        if (led1) {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, outputBitmask & 0x01);     // B5  -> First LED (Green)
+        } if (led2) {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, outputBitmask & 0x02);     // B3  -> Second LED (Red)
+        } if (led3) {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, outputBitmask & 0x04);     // B4  -> Third LED (Red)
+        } if (led4) {
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, outputBitmask & 0x08);    // B10 -> Fourth LED (Red)
+        }
+
         HAL_Delay(timeDelay); 
         // TODO: Right now we poll the buttons after each beat
 
@@ -93,6 +110,7 @@ int main(void) {
             outputBitmask *= 2;
         }
         // --- Multiplexer Polling ---
+        /* UNDER CONSTRUCTION
         for(char channel = 0; channel < 5; channel++) {        // For each of the 16 channels 
                                                                 // In reality only going to check 8 channels
             // TODO: Can put a for loop here  
@@ -108,6 +126,20 @@ int main(void) {
             sprintf(buff, "Channel%d: %d\r\n",channel, result);  // %hu == "unsigned short" (16 bit)
             SerialPuts(buff);
         }
+        */
+        // --- (temp) Button Polling ---
+        // Buttons don't match with LEDs!
+
+        bool button1 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_2);
+        bool button2 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3);
+        bool button3 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+        bool button4 = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14);   
+        
+        if(button1) {led1 ^= button1;}
+        if(button2) {led2 ^= button2;}
+        if(button3) {led3 ^= button3;}
+        if(button4) {led4 ^= button4;}
+
     } 
 
     return 0;
