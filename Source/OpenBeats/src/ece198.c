@@ -13,9 +13,7 @@
 // Initialize a pin (or pins) to a particular mode, with optional pull-up or pull-down resistors
 // and possible alternate function
 // (we use this so students don't need to know about structs)
-
-void InitializePin(GPIO_TypeDef *port, uint16_t pins, uint32_t mode, uint32_t pullups, uint8_t alternate)
-{
+void InitializePin(GPIO_TypeDef *port, uint16_t pins, uint32_t mode, uint32_t pullups, uint8_t alternate) {
     GPIO_InitTypeDef GPIO_InitStruct;
     GPIO_InitStruct.Pin = pins;
     GPIO_InitStruct.Mode = mode;
@@ -31,9 +29,7 @@ void InitializePin(GPIO_TypeDef *port, uint16_t pins, uint32_t mode, uint32_t pu
 UART_HandleTypeDef UART_Handle;  // the serial port we're using
 
 // initialize the serial port at a particular baud rate (PlatformIO serial monitor defaults to 9600)
-
-HAL_StatusTypeDef SerialSetup(uint32_t baudrate)
-{
+HAL_StatusTypeDef SerialSetup(uint32_t baudrate) {
     __USART2_CLK_ENABLE();        // enable clock to USART2
     __HAL_RCC_GPIOA_CLK_ENABLE(); // serial port is on GPIOA
 
