@@ -6,20 +6,24 @@
 
 // --- Pin Assignments ---
 // LEDs (temp)
-#define LED1G GPIOB, GPIO_PIN_5     // The 1st LED is beat 1 of measure 1
-#define LED2 GPIOB, GPIO_PIN_3
-#define LED3 GPIOB, GPIO_PIN_4 
-#define LED4 GPIOB, GPIO_PIN_10
-#define LED5G 0                     // The 5th LED is beat 1 of measure 2
-#define LED6 0 
-#define LED7 0 
-#define LED8 0 
+#define LED1G GPIOB, GPIO_PIN_10     // The 1st LED is beat 1 of measure 1
+#define LED2 GPIOB, GPIO_PIN_9
+#define LED3 GPIOB, GPIO_PIN_4  
+#define LED4 GPIOA, GPIO_PIN_6
+#define LED5G GPIOA, GPIO_PIN_7                     // The 5th LED is beat 1 of measure 2
+#define LED6 GPIOB, GPIO_PIN_6 
+#define LED7 GPIOC, GPIO_PIN_7
+#define LED8 GPIOA, GPIO_PIN_9
 
-// Buttons (temp) 
-#define BUTTON1 GPIOC, GPIO_PIN_13
-#define BUTTON2 GPIOC, GPIO_PIN_14
-#define BUTTON3 GPIOC, GPIO_PIN_2
-#define BUTTON4 GPIOC, GPIO_PIN_3
+// Buttons
+#define BUTTON1 GPIOC, GPIO_PIN_10   // Button 1 must correpond to led 1
+#define BUTTON2 GPIOC, GPIO_PIN_12
+#define BUTTON3 GPIOA, GPIO_PIN_13
+#define BUTTON4 GPIOA, GPIO_PIN_14 
+#define BUTTON5 GPIOB, GPIO_PIN_15   // Button 1 must correpond to led 1
+#define BUTTON6 GPIOC, GPIO_PIN_13
+#define BUTTON7 GPIOC, GPIO_PIN_14 
+#define BUTTON8 GPIOC, GPIO_PIN_15
 
 // Button Multiplexer Pins
 #define MUXSIG GPIOB, GPIO_PIN_8
@@ -54,6 +58,10 @@ int main(void) {
     InitializePin(LED2, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
     InitializePin(LED3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
     InitializePin(LED4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(LED5G, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(LED6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(LED7, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(LED8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
     // --- (temp) Button Pins --- // Will get removed
     InitializePin(BUTTON1, GPIO_MODE_INPUT, GPIO_PULLDOWN, 0);  // PC13
@@ -87,6 +95,10 @@ int main(void) {
     HAL_GPIO_WritePin(LED2,  0);
     HAL_GPIO_WritePin(LED3,  0);
     HAL_GPIO_WritePin(LED4,  0);
+    HAL_GPIO_WritePin(LED5G, 0);      
+    HAL_GPIO_WritePin(LED6,  0);
+    HAL_GPIO_WritePin(LED7,  0);
+    HAL_GPIO_WritePin(LED8,  0);
 
     // Set up serial
     SerialSetup(9600);
@@ -95,12 +107,12 @@ int main(void) {
     SerialPuts("--- Running darwinMain.c --- ");  
 
 
-    char outputBitmask = 0x1; 
-    int bpm = 180;                  // Change if you want a different bpm 
+    int outputBitmask = 0x1; 
+    int bpm = 220;                  // Change if you want a different bpm 
     int timeDelay = 60000 / bpm;   // Time between each beat
 
     //bool led1State = 1, led2State = 1, led3State = 1, led4State = 1;  // TODO: Will be 8 here 
-    bool ledStates[4] = {1,1,1,1};
+    bool ledStates[8] = {1,1,1,1,1,1,1,1};
     // --- While True --- 
     while(true) {
         // --- Beatmap blinking --- 
@@ -109,6 +121,12 @@ int main(void) {
         // N.B Green LED is beat 1. Assumes 4/4. Read Left to right  
         // TODO: Can put a for loop here   
         // TODO: Can maybe go under the hood and do a bit shift with LED state object (not sure what stm likes)
+        if(outputBitmask > 128) {  // TODO this gets changed to 8 bits with 8 LEDs
+            outputBitmask = 0x1; 
+        } else {
+            outputBitmask *= 2;  // Shift the output bitmask
+        }
+
         if (ledStates[0]) {
             HAL_GPIO_WritePin(LED1G, outputBitmask & 0x01);     // B5  -> First LED (Green)
         } if (ledStates[1]) {
@@ -118,16 +136,20 @@ int main(void) {
         } if (ledStates[3]) {
             HAL_GPIO_WritePin(LED4, outputBitmask & 0x08);      // B10 -> Fourth LED (Red) 
         }
-
+        if (ledStates[4]) {
+            HAL_GPIO_WritePin(LED5G, outputBitmask & 16);     // B5  -> First LED (Green)
+        } if (ledStates[5]) {
+            HAL_GPIO_WritePin(LED6, outputBitmask & 32);      // B3  -> Second LED (Red)
+        } if (ledStates[6]) {
+            HAL_GPIO_WritePin(LED7, outputBitmask & 64);      // B4  -> Third LED (Red) 
+        } if (ledStates[7]) {
+            HAL_GPIO_WritePin(LED8, outputBitmask & 128);      // B4  -> Third LED (Red) 
+        }
         HAL_Delay(timeDelay);  // NOTE: This is the line that correponds to the BPM between beats
         // TODO: Right now we poll the buttons after each beat
-
-        if(outputBitmask > 8) {  // TODO this gets changed to 8 bits with 8 LEDs
-            outputBitmask = 0x1; 
-        } else {
-            outputBitmask *= 2;  // Shift the output bitmask
-        }
-        // --- Multiplexer Polling ---
+        // 0b10000000 = 128 
+        // --- Multiplexer Polling --- 
+        /*
         for(char channel = 0; channel < 5; channel++) {        // For each of the 16 channels 
                                                                 // In reality only going to check 8 channels
             // TODO: Can put a for loop here  
@@ -143,20 +165,27 @@ int main(void) {
             sprintf(buff, "Channel%d: %d\r\n",channel, result);  // %hu == "unsigned short" (16 bit)
             SerialPuts(buff);
         }
+        */
         
         // --- (temp) Button Polling ---
         // TODO: Re-Match Button defines with proper LED's in hard (rn buttons don't match with right led)
-        /*
         bool button1 = HAL_GPIO_ReadPin(BUTTON1);
         bool button2 = HAL_GPIO_ReadPin(BUTTON2);
         bool button3 = HAL_GPIO_ReadPin(BUTTON3);
         bool button4 = HAL_GPIO_ReadPin(BUTTON4);   
+        bool button5 = HAL_GPIO_ReadPin(BUTTON5);
+        bool button6 = HAL_GPIO_ReadPin(BUTTON6);
+        bool button7 = HAL_GPIO_ReadPin(BUTTON7);
+        bool button8 = HAL_GPIO_ReadPin(BUTTON8);   
         
         if(button1) {ledStates[0] ^= button1;}
         if(button2) {ledStates[1] ^= button2;}
         if(button3) {ledStates[2] ^= button3;}
         if(button4) {ledStates[3] ^= button4;} 
-        */
+        if(button5) {ledStates[4] ^= button5;}
+        if(button6) {ledStates[5] ^= button6;}
+        if(button7) {ledStates[6] ^= button7;}
+        if(button8) {ledStates[7] ^= button8;} 
     } 
     return 0;
 }
@@ -164,7 +193,6 @@ int main(void) {
 void SysTick_Handler(void) {
     HAL_IncTick();
 }
-
 bool delayWhilePolling(double delay, GPIO_TypeDef* buttonPort, uint8_t buttonPin) {
     float endTime = HAL_GetTick() + delay;
 
