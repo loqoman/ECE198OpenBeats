@@ -36,7 +36,7 @@ void playBar(
     float beat_len = 60.0 / BPM * 1000; // convert to ms
 
     float time_on = beat_len * 0.75;
-    float time_off = beat_lean * 0.25; 
+    float time_off = beat_len * 0.25; 
 
     size_t currentIndex = currentBeat - 1;
 
