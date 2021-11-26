@@ -155,10 +155,10 @@ int main(void) {
     int timeDelay = 60000 / bpm;   // Time between each beat
 
     //bool led1State = 1, led2State = 1, led3State = 1, led4State = 1;  // TODO: Will be 8 here 
-    bool snareState[8]  = {1,1,1,1,1,1,1,1}; 
-    bool tomState[8]    = {0,0,0,0,1,1,1,1};
-    bool cymbolState[8] = {0,0,0,0,1,1,1,1};
-    bool bassState[8]   = {0,0,0,0,1,1,1,1};
+    bool snareState[8]  = {1,0,1,0,1,0,1,1};
+    bool tomState[8]    = {0,1,0,1,0,1,0,1};
+    bool cymbolState[8] = {0,0,1,0,1,1,0,1};
+    bool bassState[8]   = {1,0,0,0,1,0,0,0};
     // --- While True --- 
     int beat = 1;
     while(true) { 
