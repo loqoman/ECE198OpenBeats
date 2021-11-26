@@ -197,7 +197,7 @@ bool delayWhilePolling(double delay, GPIO_TypeDef* buttonPort, uint8_t buttonPin
     float endTime = HAL_GetTick() + delay;
 
     while (HAL_GetTick() < endTime) {
-        return !(HAL_GPIO_ReadPin(buttonPort, buttonPort));
+        return !(HAL_GPIO_ReadPin(buttonPort, &buttonPort));
     }
 
     return false;
