@@ -162,30 +162,8 @@ int main(void) {
     // --- While True --- 
     int beat = 1;
     while(true) { 
-        // NOTE: This is where we select a bool[] array based on the state of the rotary switch
-        // Go get the insturment states we want 
-        // bool *currentInsturment;
-        // if (HAL_GPIO_ReadPin(POS1)) {
-        //     // insturmentSelected = 0;
-        //     currentInsturment = snareState;
-        //     SerialPuts("Selected Snare");
-        // } if (HAL_GPIO_ReadPin(POS2)) {
-        //     //insturmentSelected = 1;
-        //     SerialPuts("Selected Tom");
-        //     currentInsturment = tomState;
-        // } if (HAL_GPIO_ReadPin(POS3)) {
-        //     //sturmentSelected = 2;
-        //     SerialPuts("Selected Cymbal");
-        //     currentInsturment = cymbolState;
-        // } if (HAL_GPIO_ReadPin(POS4)) {
-        //     //insturmentSelected = 3;
-        //     SerialPuts("Selected Bass");
-        //     currentInsturment = bassState;
-        // } else {
-        //     currentInsturment = snareState;
-        // }
         bool currentInsturment[8] = {1,1,1,1,1,1,1,1};
-        // Go get the insturment states we're operating on rn
+        // Go get the insturment states we're operating on
         // NOTE: Green LED is beat 1. Assumes 4/4. Read Left to right  
         // Increment the current beat
 
@@ -203,13 +181,11 @@ int main(void) {
         } if (currentInsturment[4]) {
             HAL_GPIO_WritePin(LED5G, outputBitmask & 16);     // B5  -> First LED (Green)
         } if (currentInsturment[5]) {
-            //SerialPuts("I'm inside the dumb bitch function XDDDDD :33\n");
             HAL_GPIO_WritePin(LED6, outputBitmask & 32);      // B3  -> Second LED (Red)
 
             //sprintf(buf, "The current value of outputBitmask %d of beat: %d, AND function is %d\n", outputBitmask, beat, (outputBitmask & 32));
             //SerialPuts(buf);
             //if ((outputBitmask & 32) != 0) {
-                //SerialPuts("Deez nuts, hah, got eeeem\n");
                 //HAL_GPIO_WritePin(LED6, 1);
             //}
         } if (currentInsturment[6]) {
@@ -237,9 +213,7 @@ int main(void) {
         bool button6 = HAL_GPIO_ReadPin(BUTTON6);
         bool button7 = HAL_GPIO_ReadPin(BUTTON7);
         bool button8 = HAL_GPIO_ReadPin(BUTTON8);   
-        if(button1) {
-            SerialPuts("Button one pressed\n");
-        } 
+    
         if(button1) {currentInsturment[0] ^= button1;}
         if(button2) {currentInsturment[1] ^= button2;}
         if(button3) {currentInsturment[2] ^= button3;}
